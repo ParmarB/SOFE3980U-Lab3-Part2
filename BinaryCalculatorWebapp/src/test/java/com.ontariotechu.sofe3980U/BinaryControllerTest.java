@@ -7,6 +7,9 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+
+import java.beans.Transient;
+
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 
 import org.junit.runner.RunWith;
@@ -57,4 +60,64 @@ public class BinaryControllerTest {
 			.andExpect(model().attribute("operand1", "111"));
     }
 
+    // testing for the get request with an operand
+    @Test
+    public void getParameter1() throws Exception {
+        this.mvc. perform(get("/").param("operand1", "011"))
+        .andExpect(status().isOk())
+        .andExpect(view().name("calculator"))
+        .andExpect(model().attribute("operand1", "011"))
+        .andExpect(model().attribute("operand1Focused", true));
+    }
+
+    // testing for adding 2 operands
+    @Test
+    public void postParameter1() throws Exception {
+        this.mvc.perform(post("/").param("operand1","011")
+        .param("operator","+").param("operand2","000"))//.andDo(print())
+            .andExpect(status().isOk())
+            .andExpect(view().name("result"))
+			.andExpect(model().attribute("result", "11"))
+			.andExpect(model().attribute("operand1", "011"));
+    }
+
+     // testing for empty operands in addition
+     @Test
+     public void postEmptyOperandsAdd() throws Exception {
+         this.mvc.perform(post("/").param("operand1","")
+         .param("operator","+").param("operand2",""))
+             .andExpect(status().isOk())
+             .andExpect(view().name("result"))
+             .andExpect(model().attribute("result", "0"));
+     }
+
+    //testing for post bitwiseOr operation with 2 operands
+     @Test
+     public void postBitwiseOR() throws Exception {
+         this.mvc.perform(post("/").param("operand1","000")
+         .param("operator","|").param("operand2","111"))
+             .andExpect(status().isOk())
+             .andExpect(view().name("result"))
+             .andExpect(model().attribute("result", "111"));
+     }
+
+     //testing for post AND operation with 2 operands
+     @Test
+     public void postAND() throws Exception {
+         this.mvc.perform(post("/").param("operand1","000")
+         .param("operator","&").param("operand2","111"))
+             .andExpect(status().isOk())
+             .andExpect(view().name("result"))
+             .andExpect(model().attribute("result", "0"));
+     }
+
+     //testing for post Multiply operation with 2 operands
+     @Test
+     public void postMultiply() throws Exception {
+         this.mvc.perform(post("/").param("operand1","000")
+         .param("operator","*").param("operand2","111"))
+             .andExpect(status().isOk())
+             .andExpect(view().name("result"))
+             .andExpect(model().attribute("result", "0"));
+     }
 }

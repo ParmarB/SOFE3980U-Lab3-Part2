@@ -48,4 +48,99 @@ public class BinaryAPIControllerTest {
 			.andExpect(MockMvcResultMatchers.jsonPath("$.result").value(10001))
 			.andExpect(MockMvcResultMatchers.jsonPath("$.operator").value("add"));
     }
+
+    // testing for adding 2 binary numbers but no operands provided and result is a string
+    @Test
+    public void addTest3() throws Exception {
+        this.mvc.perform(get("/add").param("operand1","").param("operand2",""))
+            .andExpect(status().isOk())
+            .andExpect(content().string("0"));
+    }
+
+    // testing for adding 2 operands and resultant string output
+    @Test
+    public void addTest4() throws Exception {
+        this.mvc.perform(get("/add").param("operand1","011")
+        .param("operand2","000"))
+            .andExpect(status().isOk())
+            .andExpect(content().string("11"));
+    }
+
+    //testing OR with 2 operands
+    @Test
+    public void bitWiseOrTest() throws Exception {
+        this.mvc.perform(get("/or").param("operand1","011")
+        .param("operand2","000"))
+            .andExpect(status().isOk())
+            .andExpect(content().string("11"));
+    }
+
+    //testing AND with 2 operands
+    @Test
+    public void ANDtest() throws Exception {
+        this.mvc.perform(get("/and").param("operand1","011")
+        .param("operand2","000"))
+            .andExpect(status().isOk())
+            .andExpect(content().string("0"));
+    }
+
+    //tesitng multiply with 2 operands
+    @Test
+    public void mulitplyTest() throws Exception {
+        this.mvc.perform(get("/multiply").param("operand1","011")
+        .param("operand2","000"))
+            .andExpect(status().isOk())
+            .andExpect(content().string("0"));
+    }
+
+
+
+
+    //testing for adding 2 operands and resultant json object as output
+    @Test
+    public void addTest5() throws Exception {
+        this.mvc.perform(get("/add_json").param("operand1","11")
+        .param("operand2","000"))
+            .andExpect(status().isOk())
+            .andExpect(MockMvcResultMatchers.jsonPath("$.operand1").value(11))
+			.andExpect(MockMvcResultMatchers.jsonPath("$.operand2").value(000))
+			.andExpect(MockMvcResultMatchers.jsonPath("$.result").value(11))
+			.andExpect(MockMvcResultMatchers.jsonPath("$.operator").value("add"));
+    }
+
+    //testing for OR of 2 operands and resultant json object as output
+    @Test
+    public void bitWiseOrTest2() throws Exception {
+        this.mvc.perform(get("/or_json").param("operand1","11")
+        .param("operand2","000"))
+            .andExpect(status().isOk())
+            .andExpect(MockMvcResultMatchers.jsonPath("$.operand1").value(11))
+			.andExpect(MockMvcResultMatchers.jsonPath("$.operand2").value(000))
+			.andExpect(MockMvcResultMatchers.jsonPath("$.result").value(11))
+			.andExpect(MockMvcResultMatchers.jsonPath("$.operator").value("or"));
+    }
+
+    //testing for AND of 2 operands and resultant json object as output
+    @Test
+    public void ANDtest2() throws Exception {
+        this.mvc.perform(get("/and_json").param("operand1","11")
+        .param("operand2","000"))
+            .andExpect(status().isOk())
+            .andExpect(MockMvcResultMatchers.jsonPath("$.operand1").value(11))
+			.andExpect(MockMvcResultMatchers.jsonPath("$.operand2").value(000))
+			.andExpect(MockMvcResultMatchers.jsonPath("$.result").value(0))
+			.andExpect(MockMvcResultMatchers.jsonPath("$.operator").value("and"));
+    }
+
+    //testing for Multiply of 2 operands and resultant json object as output
+    @Test
+    public void mulitplyTest2() throws Exception {
+        this.mvc.perform(get("/multiply_json").param("operand1","11")
+        .param("operand2","000"))
+            .andExpect(status().isOk())
+            .andExpect(MockMvcResultMatchers.jsonPath("$.operand1").value(11))
+			.andExpect(MockMvcResultMatchers.jsonPath("$.operand2").value(000))
+			.andExpect(MockMvcResultMatchers.jsonPath("$.result").value(0))
+			.andExpect(MockMvcResultMatchers.jsonPath("$.operator").value("multiply"));
+    }
 }
